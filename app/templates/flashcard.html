@@ -27,5 +27,35 @@
                 <p>{{ flashcard.answer }}</p>
             {% endif %}
         </div>
+        {% if flashcard.hint1 or flashcard.hint1_html %}
+            <h2>Hint 1</h2>
+            <div class="flashcard-body">
+                {% if flashcard.hint1_html %}
+                    <p>{{ flashcard.hint1_html|safe }}</p>
+                {% else %}
+                    <p>{{ flashcard.hint1 }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if flashcard.hint2 or flashcard.hint2_html %}
+            <h2>Hint 2</h2>
+            <div class="flashcard-body">
+                {% if flashcard.hint2_html %}
+                    <p>{{ flashcard.hint2_html|safe }}</p>
+                {% else %}
+                    <p>{{ flashcard.hint2 }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if flashcard.hint3 or flashcard.hint3_html %}
+            <h2>Hint 3</h2>
+            <div class="flashcard-body">
+                {% if flashcard.hint3_html %}
+                    <p>{{ flashcard.hint3_html|safe }}</p>
+                {% else %}
+                    <p>{{ flashcard.hint3 }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

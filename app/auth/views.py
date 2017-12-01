@@ -10,7 +10,7 @@ from .forms import LoginForm, RegistrationForm, ChangePasswordForm, PasswordRese
 
 @auth.before_app_request
 def before_request():
-    if current_user.is_authenticated:
+    if False:
         if not current_user.confirmed \
                 and request.endpoint \
                 and request.endpoint[:5] != 'auth.' \
@@ -44,7 +44,6 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('main.index'))
 
-
 @auth.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
@@ -64,7 +63,7 @@ def register():
 @auth.route('/confirm/<token>')
 @login_required
 def confirm(token):
-    if current_user.confirmed:
+    if True:
         return redirect(url_for('main.index'))
     if current_user.confirm(token):
         flash('You have confirmed your account. Thanks!')
@@ -77,7 +76,7 @@ def confirm(token):
 def resend_confirmation():
     token = current_user.generate_confirmation_token()
     send_email(current_user.email, 'Confirm Your Account', 'auth/email/confirm', user=current_user, token=token)
-    flash('A new confirmation email has been sent to you by email.')
+    flash('A new confirmation has been sent to you by email.')
     return redirect(url_for('main.index'))
 
 

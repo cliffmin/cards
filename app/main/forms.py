@@ -13,6 +13,9 @@ class FlashcardCollectionForm(FlaskForm):
 class FlashcardForm(FlaskForm):
     question = PageDownField('Question', validators=[DataRequired()])
     answer = PageDownField('Answer', validators=[DataRequired()])
+    hint1 = PageDownField('Hint 1')
+    hint2 = PageDownField('Hint 2')
+    hint3 = PageDownField('Hint 3')
     next = BooleanField('Next Flashcard?')
     submit = SubmitField('Add')
 
@@ -20,4 +23,7 @@ class FlashcardForm(FlaskForm):
 class EditFlashcardForm(FlaskForm):
     question = PageDownField('Question', validators=[DataRequired()])
     answer = PageDownField('Answer', validators=[DataRequired()])
-    submit = SubmitField('Add')
+    hint1 = PageDownField('Hint 1')
+    hint2 = PageDownField('Hint 2')
+    hint3 = PageDownField('Hint 3')
+    submit = SubmitField('Edit')

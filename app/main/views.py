@@ -89,7 +89,11 @@ def add_flashcard(id):
     form = FlashcardForm()
     flashcardcollection = FlashcardCollection.query.get_or_404(id)
     if form.validate_on_submit():
-        card = Flashcard(question=form.question.data, answer=form.answer.data)
+        card = Flashcard(question=form.question.data,
+                         answer=form.answer.data,
+                         hint1=form.hint1.data,
+                         hint2=form.hint2.data,
+                         hint3=form.hint3.data)
         flashcardcollection.flashcards.append(card)
         db.session.add(flashcardcollection)
         db.session.commit()
@@ -122,12 +126,18 @@ def edit_flashcard(collId, cardId):
     if form.validate_on_submit():
         flashcard.question = form.question.data
         flashcard.answer = form.answer.data
+        flashcard.hint1 = form.hint1.data
+        flashcard.hint2 = form.hint2.data
+        flashcard.hint3 = form.hint3.data
         db.session.add(flashcard)
         db.session.commit()
         flash('Flashcard was updated.')
         return redirect(url_for('.flashcard', collId=collId, cardId=cardId))
     form.question.data = flashcard.question
     form.answer.data = flashcard.answer
+    form.hint1.data = flashcard.hint1
+    form.hint2.data = flashcard.hint2
+    form.hint3.data = flashcard.hint3
     return render_template('edit_flashcard.html', form=form, flashcard=flashcard)
 
 
