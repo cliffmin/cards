@@ -10,15 +10,11 @@ class Flashcard(db.Model):
     question_html = db.Column(db.Text)
     answer = db.Column(db.Text)
     answer_html = db.Column(db.Text)
-    hint1 = db.Column(db.Text)
-    hint2 = db.Column(db.Text)
-    hint3 = db.Column(db.Text)
-    hint1_html = db.Column(db.Text)
-    hint2_html = db.Column(db.Text)
-    hint3_html = db.Column(db.Text)
+    hint_amount = db.Column(db.Integer, default=0)
     right_answered = db.Column(db.Boolean, default=False)
     wrong_answered = db.Column(db.Boolean, default=False)
     collection_id = db.Column(db.Integer, db.ForeignKey('flashcardcollection.id'))
+    hints = db.relationship('Hint', backref='collection', lazy='dynamic')
 
     @staticmethod
     def on_changed_question(target, value, oldvalue, initiator):
@@ -58,9 +54,6 @@ class Flashcard(db.Model):
     def __repr__(self):
         return '<Flashcard: %r>' % self.id
 
+
 db.event.listen(Flashcard.answer, 'set', Flashcard.on_changed_answer)
 db.event.listen(Flashcard.question, 'set', Flashcard.on_changed_question)
-db.event.listen(Flashcard.hint1, 'set', Flashcard.on_changed_hint1)
-db.event.listen(Flashcard.hint2, 'set', Flashcard.on_changed_hint2)
-db.event.listen(Flashcard.hint3, 'set', Flashcard.on_changed_hint3)
-

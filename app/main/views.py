@@ -118,27 +118,24 @@ def flashcard(collId, cardId):
 @main.route('/flashcardcollection/<int:collId>/flashcard/<int:cardId>/edit', methods=['GET', 'POST'])
 @login_required
 def edit_flashcard(collId, cardId):
-    form = EditFlashcardForm()
     flashcardcollection = FlashcardCollection.query.get_or_404(collId)
     flashcard = flashcardcollection.flashcards.filter_by(id=cardId).first()
+    form = EditFlashcardForm(flashcard)
     if flashcard is None:
         abort(404)
-    if form.validate_on_submit():
+    if 'hint_btn' in request.form and 'hint_amount' in request.args:
+        flashcard.hint_amount = flashcard.hint_amount + 1
+        db.session.add(flashcard)
+        db.session.commit()
+        form = EditFlashcardForm(flashcard)
+    if 'edit_btn' in request.form and form.validate_on_submit():
         flashcard.question = form.question.data
         flashcard.answer = form.answer.data
-        flashcard.hint1 = form.hint1.data
-        flashcard.hint2 = form.hint2.data
-        flashcard.hint3 = form.hint3.data
         db.session.add(flashcard)
         db.session.commit()
         flash('Flashcard was updated.')
         return redirect(url_for('.flashcard', collId=collId, cardId=cardId))
-    form.question.data = flashcard.question
-    form.answer.data = flashcard.answer
-    form.hint1.data = flashcard.hint1
-    form.hint2.data = flashcard.hint2
-    form.hint3.data = flashcard.hint3
-    return render_template('edit_flashcard.html', form=form, flashcard=flashcard)
+    return render_template('edit_flashcard.html', form=form)
 
 
 @main.route('/flashcardcollection/<int:id>/learn')
