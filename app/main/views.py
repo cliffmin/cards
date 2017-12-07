@@ -7,7 +7,7 @@ from ..models.flashcard_collections import FlashcardCollection
 from ..models.flashcard import Flashcard
 from . import main
 from .. import db
-from .forms import FlashcardCollectionForm, FlashcardForm, EditFlashcardForm
+from .forms import FlashcardCollectionForm, AddFlashcardForm, EditFlashcardForm
 from random import choice
 
 
@@ -86,7 +86,7 @@ def delete_flashcardcollection(id):
 @main.route('/flashcardcollection/<int:id>/add-flashcard', methods=['GET', 'POST'])
 @login_required
 def add_flashcard(id):
-    form = FlashcardForm()
+    form = AddFlashcardForm()
     flashcardcollection = FlashcardCollection.query.get_or_404(id)
     if form.validate_on_submit():
         card = Flashcard(question=form.question.data,
@@ -121,6 +121,8 @@ def edit_flashcard(collId, cardId):
     flashcardcollection = FlashcardCollection.query.get_or_404(collId)
     flashcard = flashcardcollection.flashcards.filter_by(id=cardId).first()
     form = EditFlashcardForm(flashcard)
+    # form.question.data = flashcard.question
+    # form.answer.data = flashcard.answer
     if flashcard is None:
         abort(404)
     if 'hint_btn' in request.form and 'hint_amount' in request.args:

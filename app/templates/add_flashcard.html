@@ -7,10 +7,147 @@
     <div class="page-header">
         <h1>Add Flashcard to {{ name }}</h1>
     </div>
-    <div>{{ wtf.quick_form(form) }}</div>
+    <form class="form form-horizontal" method="post" role="form">
+        {{ form.hidden_tag() }}
+        {{ wtf.form_errors(form, hiddens="only") }}
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-offset-5">
+                    {{ form.question.label }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-offset-5">
+                    {{ form.question.label }} <b>Preview</b>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.question(only_input=True) }}
+            </div>
+            <div class="col-md-6">
+                {{ form.question(only_preview=True) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="col-md-offset-5">
+                    {{ form.answer.label }}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="col-md-offset-5">
+                    {{ form.answer.label }} <b>Preview</b>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form.answer(only_input=True) }}
+            </div>
+            <div class="col-md-6">
+                {{ form.answer(only_preview=True) }}
+            </div>
+        </div>
+        <div id="hint1">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-offset-5">
+                        {{ form.hint1.label }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-offset-5">
+                        {{ form.hint1.label }} <b>Preview</b>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.hint1(only_input=True) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.hint1(only_preview=True) }}
+                </div>
+            </div>
+        </div>
+        <div id="hint2">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-offset-5">
+                        {{ form.hint2.label }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-offset-5">
+                        {{ form.hint2.label }} <b>Preview</b>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.hint2(only_input=True) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.hint2(only_preview=True) }}
+                </div>
+            </div>
+        </div>
+        <div id="hint3">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="col-md-offset-5">
+                        {{ form.hint3.label }}
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="col-md-offset-5">
+                        {{ form.hint3.label }} <b>Preview</b>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    {{ form.hint3(only_input=True) }}
+                </div>
+                <div class="col-md-6">
+                    {{ form.hint3(only_preview=True) }}
+                </div>
+            </div>
+        </div>
+        <div class="row" style="padding: 20px">
+            <div class="col-md-3 col-md-offset-3">
+                {{ wtf.form_field(form.submit) }}
+            </div>
+            <div class="col-md-3">
+                {{ wtf.form_field(form.hint) }}
+            </div>
+        </div>
+    </form>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
     {{ pagedown.include_pagedown() }}
+    <script>
+        var hint_counter = 0;
+        $(document).ready(function () {
+            $('label[for="hint"]').hide();
+            if (hint_counter == 0) {
+                $('#hint1').hide();
+                $('#hint2').hide();
+                $('#hint3').hide();
+            }
+
+            $('#hint').click(function () {
+                if (hint_counter < 3) {
+                    hint_counter++;
+                    $('#hint' + hint_counter).show();
+                }
+            });
+        });
+    </script>
+
+
 {% endblock %}

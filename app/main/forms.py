@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_pagedown.fields import PageDownField
-from wtforms import StringField, SubmitField, BooleanField, Field, FormField, FieldList
+from wtforms import StringField, SubmitField, BooleanField, Field, FormField, FieldList, HiddenField
 from wtforms.validators import DataRequired
 from wtforms.widgets import html_params, HTMLString
 
@@ -10,7 +10,7 @@ class ButtonWidget(object):
     Renders a multi-line text area.
     `rows` and `cols` ought to be passed as keyword args when rendering.
     """
-    input_type = 'submit'
+    input_type = 'button'
 
     html_params = staticmethod(html_params)
 
@@ -42,26 +42,22 @@ class FlashcardForm(FlaskForm):
     hint1 = PageDownField('Hint 1')
     hint2 = PageDownField('Hint 2')
     hint3 = PageDownField('Hint 3')
+
+    def __init__(self, flashcard=None):
+        super().__init__()
+        self.answer.data = flashcard.answer if flashcard is not None else ''
+        self.question.data = flashcard.question if flashcard is not None else ''
+        self.hint1.data = flashcard.hint1 if flashcard is not None else ''
+        self.hint2.data = flashcard.hint2 if flashcard is not None else ''
+        self.hint3.data = flashcard.hint3 if flashcard is not None else ''
+
+
+class AddFlashcardForm(FlashcardForm):
     next = BooleanField('Next Flashcard?')
     submit = SubmitField('Add')
+    hint = ButtonField('Add Hint')
 
 
-class HintForm(FlaskForm):
-    hint = PageDownField('Hint')
-
-
-class EditFlashcardForm(FlaskForm):
-    hints = None
-    hint_amount = 0
-
-    def __init__(self, flashcard):
-        self.answer = flashcard.answer
-        self.question = flashcard.question
-        self.hint_amount = flashcard.hint_amount
-        self.hints = FieldList(FormField(HintForm), min_entries=self.hint_amount, max_entries=5)
-        super().__init__()
-
-    question = PageDownField('Question', validators=[DataRequired()])
-    answer = PageDownField('Answer', validators=[DataRequired()])
-    submit_btn = SubmitField('Edit')
-    hint_btn = SubmitField('Add a Hint')
+class EditFlashcardForm(FlashcardForm):
+    submit = SubmitField('Add')
+    hint = ButtonField('Add Hint')

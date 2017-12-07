@@ -7,6 +7,19 @@
     margin-left: 280px;
 }
 
+div.flask-pagedown-preview {
+    margin: 0px !important;
+    min-height: 50px;
+}
+
+.flask-pagedown-input {
+    width: 100%;
+}
+
+#submit {
+    width: 100%;
+}
+
 @media only screen and (min-width: 481px) {
     .flex-row.row {
         display: -webkit-box;
@@ -125,7 +138,7 @@ div.flask-pagedown-preview h3 {
     display: none;
 }
 
-.btn-answer, .choiseBtn, .btn-learn{
+.btn-answer, .choiseBtn, .btn-learn {
     margin-bottom: 15px;
     margin-top: 15px;
 }
