@@ -1,6 +1,10 @@
+import datetime
+
 from .. import db
 from markdown import markdown
 import bleach
+
+import math
 
 
 class Flashcard(db.Model):
@@ -16,8 +20,11 @@ class Flashcard(db.Model):
     hint2_html = db.Column(db.Text)
     hint3 = db.Column(db.Text)
     hint3_html = db.Column(db.Text)
-    right_answered = db.Column(db.Boolean, default=False)
-    wrong_answered = db.Column(db.Boolean, default=False)
+    repetitions = db.Column(db.Integer, default=0)
+    interval = db.Column(db.Integer, default=1)
+    easiness = db.Column(db.Integer, default=2.5)
+    time = db.Column(db.DateTime, default=datetime.datetime.now())
+    next_time = db.Column(db.DateTime)
     collection_id = db.Column(db.Integer, db.ForeignKey('flashcardcollection.id'))
 
     allowed_tags = ['abbr', 'acronym', 'b', 'blockquote', 'code', 'i',
@@ -27,7 +34,26 @@ class Flashcard(db.Model):
                      'a': ['href', 'rel'],
                      'img': ['src', 'alt']}
 
-    # hints = db.relationship('Hint', backref='collection', lazy='dynamic')
+    def is_new(self):
+        return self.repetitions == 0
+
+    def calc_next_time(self):
+        return self.time + datetime.timedelta(days=math.ceil(self.interval))
+
+    def repeat(self, performance, time):
+        self.easiness = max(1.3, self.easiness + 0.1 - (5.0 - performance) * (0.08 + (5.0 - performance) * 0.02))
+        if performance < 3:
+            self.repetitions = 0
+        else:
+            self.repetitions += 1
+        if self.repetitions == 1:
+            self.interval = 1
+        elif self.repetitions == 2:
+            self.interval = 6
+        else:
+            self.interval *= self.easiness
+        self.time = time
+        self.next_time = self.calc_next_time()
 
     @staticmethod
     def on_changed_question(target, value, oldvalue, initiator):
@@ -35,8 +61,6 @@ class Flashcard(db.Model):
                                             tags=Flashcard.allowed_tags,
                                             attributes=Flashcard.allowed_attrs,
                                             strip=True)
-        i = 1
-        # target.question_html = value
 
     @staticmethod
     def on_changed_answer(target, value, oldvalue, initiator):
@@ -44,7 +68,6 @@ class Flashcard(db.Model):
                                           tags=Flashcard.allowed_tags,
                                           attributes=Flashcard.allowed_attrs,
                                           strip=True)
-        # target.answer_html = value
 
     @staticmethod
     def on_changed_hint1(target, value, oldvalue, initiator):
@@ -52,7 +75,6 @@ class Flashcard(db.Model):
                                          tags=Flashcard.allowed_tags,
                                          attributes=Flashcard.allowed_attrs,
                                          strip=True)
-        # target.hint1_html = value
 
     @staticmethod
     def on_changed_hint2(target, value, oldvalue, initiator):
@@ -60,7 +82,6 @@ class Flashcard(db.Model):
                                          tags=Flashcard.allowed_tags,
                                          attributes=Flashcard.allowed_attrs,
                                          strip=True)
-        # target.hint2_html = value
 
     @staticmethod
     def on_changed_hint3(target, value, oldvalue, initiator):
@@ -68,7 +89,6 @@ class Flashcard(db.Model):
                                          tags=Flashcard.allowed_tags,
                                          attributes=Flashcard.allowed_attrs,
                                          strip=True)
-        # target.hint3_html = value
 
     def __repr__(self):
         return '<Flashcard: %r>' % self.id

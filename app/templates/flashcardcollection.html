@@ -10,20 +10,15 @@
         {% endfor %}
         <br>
         <div class="margTop">
-            <p class="label label-default">{{ flashcardcollection.flashcards.filter_by(wrong_answered=False, right_answered=False).count() }} Flashcards in
-                this Collection.</p>
-            <p class="label label-danger">{{ flashcardcollection.flashcards.filter_by(wrong_answered=True).count() }} wrong
-                answered</p>
-            <p class="label label-success">{{ flashcardcollection.flashcards.filter_by(right_answered=True).count() }} right
-                answered</p>
+            <p class="label label-default">{{ flashcardcollection.flashcards.all() | length }}
+                Flashcards in this Collection.</p>
         </div>
     </div>
-    <a href="{{ url_for('.learn', id=flashcardcollection.id, mode='normal') }}"><span
-            class="btn btn-primary btn-learn">Learn All</span></a>
-    <a href="{{ url_for('.learn', id=flashcardcollection.id, mode='wrong_ones') }}"><span
-            class="btn btn-danger btn-learn">Learn Wrong Ones</span></a>
-    <a href="{{ url_for('.reset_cards', id=flashcardcollection.id) }}"><span
-            class="btn btn-warning btn-learn">Reset Cards</span></a>
+    <a href="{{ url_for('.learn', collId=flashcardcollection.id, mode='normal', cardId=0) }}">
+        <span class="btn btn-primary btn-learn">Study Now</span>
+    </a>
+    <a href="{{ url_for('.reset_cards', collId=flashcardcollection.id) }}">
+        <span class="btn btn-warning btn-learn">Reset Cards</span>
+    </a>
     {% include "_flashcard.html" %}
-
 {% endblock %}

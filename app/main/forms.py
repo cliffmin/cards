@@ -45,11 +45,11 @@ class FlashcardForm(FlaskForm):
 
     def __init__(self, flashcard=None):
         super().__init__()
-        self.answer.data = flashcard.answer if flashcard is not None else ''
-        self.question.data = flashcard.question if flashcard is not None else ''
-        self.hint1.data = flashcard.hint1 if flashcard is not None else ''
-        self.hint2.data = flashcard.hint2 if flashcard is not None else ''
-        self.hint3.data = flashcard.hint3 if flashcard is not None else ''
+        self.answer.data = flashcard.answer if flashcard is not None else self.answer.data
+        self.question.data = flashcard.question if flashcard is not None else self.question.data
+        self.hint1.data = flashcard.hint1 if flashcard is not None else self.hint1.data
+        self.hint2.data = flashcard.hint2 if flashcard is not None else self.hint2.data
+        self.hint3.data = flashcard.hint3 if flashcard is not None else self.hint3.data
 
 
 class AddFlashcardForm(FlashcardForm):
@@ -59,5 +59,15 @@ class AddFlashcardForm(FlashcardForm):
 
 
 class EditFlashcardForm(FlashcardForm):
-    submit = SubmitField('Add')
+    submit = SubmitField('edit')
     hint = ButtonField('Add Hint')
+
+    def get_hint_amount(self):
+        hint_counter = 0
+        if self.hint1.data != '':
+            hint_counter += 1
+        if self.hint2.data != '':
+            hint_counter += 1
+        if self.hint3.data != '':
+            hint_counter += 1
+        return hint_counter

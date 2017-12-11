@@ -131,17 +131,19 @@
     {{ super() }}
     {{ pagedown.include_pagedown() }}
     <script>
-        var hint_counter = 0;
+        var hint_counter = {{ form.get_hint_amount() }};
         $(document).ready(function () {
             $('label[for="hint"]').hide();
-            if (hint_counter == 0) {
-                $('#hint1').hide();
-                $('#hint2').hide();
-                $('#hint3').hide();
+            $('#hint1').hide();
+            $('#hint2').hide();
+            $('#hint3').hide();
+
+            for (var i = 1; i <= hint_counter; i++) {
+                $('#hint' + i).show();
             }
 
             $('#hint').click(function () {
-                if (hint_counter < 3) {
+                if (hint_counter <= 3) {
                     hint_counter++;
                     $('#hint' + hint_counter).show();
                 }
