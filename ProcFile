@@ -1,0 +1,1 @@
+web: python manage deploy & python manage runserver
