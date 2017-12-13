@@ -1,1 +1,1 @@
-web: python manage deploy & python manage runserver
+web: gunicorn app:app --log-file=-
