@@ -20,7 +20,7 @@ from flask_migrate import Migrate, MigrateCommand
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 manager = Manager(app)
 migrate = Migrate(app, db)
-
+print(app.root_path)
 
 @app.context_processor
 def override_url_for():
